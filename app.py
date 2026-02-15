@@ -13,31 +13,40 @@ Original file is located at
 import streamlit as st
 import pandas as pd
 import joblib
+import pickle
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-st.title("🏦 Indian Bank Loan Prediction System")
 
-uploaded_file = st.file_uploader("Upload Test CSV File", type=["csv"])
+st.title("Indian Bank Loan Prediction System")
 
-model_choice = st.selectbox(
-    "Select Model",
-    ["Logistic Regression", "Decision Tree", "KNN",
-     "Naive Bayes", "Random Forest", "XGBoost"]
-)
+#Upload Dataset
 
+uploaded_file = st.file_uploader("Upload Test CSV File", type="csv")
 if uploaded_file:
-    data = pd.read_csv(uploaded_file)
+    df = pd.read_csv(uploaded_file)
+    st.write("Dataset Preview:", df.head())
 
-    model_dict = {
-        "Logistic Regression": "model/lr.pkl",
-        "Decision Tree": "model/dt.pkl",
-        "KNN": "model/knn.pkl",
-        "Naive Bayes": "model/nb.pkl",
-        "Random Forest": "model/rf.pkl",
-        "XGBoost": "model/xgb.pkl"
-    }
+    X = df.drop("target", axis=1)
+    y = df["target"]
 
-    model = joblib.load(model_dict[model_choice])
-    prediction = model.predict(data)
+    # Model selection
+    model_choice = st.selectbox("Choose a model",
+                                ["Logistic Regression", "Decision Tree", "kNN", "Naive Bayes", "Random Forest", "XGBoost"])
 
-    st.write("### Predictions")
-    st.write(prediction)
+    # Load model
+    model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
+
+    # Predictions
+    y_pred = model.predict(X)
+
+    # Metrics
+    st.subheader("Evaluation Metrics")
+    st.text(classification_report(y, y_pred))
+
+    # Confusion Matrix
+    cm = confusion_matrix(y, y_pred)
+    fig, ax = plt.subplots()
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
+    st.pyplot(fig)
