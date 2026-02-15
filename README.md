@@ -129,12 +129,12 @@ Assignement-folder/
 │-- Train.csv
 │-- Test.csv
 │-- model/
-│    ├── logistic.pkl
-│    ├── decision_tree.pkl
+│    ├── lr.pkl
+│    ├── dt.pkl
 │    ├── knn.pkl
-│    ├── naive_bayes.pkl
-│    ├── random_forest.pkl
-│    └── xgboost.pkl
+│    ├── nb.pkl
+│    ├── rf.pkl
+│    └── xgb.pkl
 
 
 # Deployment
