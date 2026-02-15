@@ -18,7 +18,8 @@ if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.write("Dataset Preview:", df.head())
 
-    X = df.drop("target", axis=1)
+   # X = df.drop("target", axis=1)
+    X = df.copy()
     y = df["target"]
 
     # Model selection
