@@ -27,9 +27,21 @@ if uploaded_file:
     # Model selection
     model_choice = st.selectbox("Choose a model",
                                 ["Logistic Regression", "Decision Tree", "kNN", "Naive Bayes", "Random Forest", "XGBoost"])
+    #Model filenames
+    model_files = {
+    "Logistic Regression": "model/lr.pkl",
+    "Decision Tree": "model/dt.pkl",
+    "KNN": "model/knn.pkl",
+    "Naive Bayes": "model/nb.pkl",
+    "Random Forest": "model/rf.pkl",
+    "XGBoost": "model/xgb.pkl"
+}
 
+    model_path = model_files[model_choice]
+
+    model = joblib.load(model_path)
     # Load model
-    model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
+   # model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
 
     # Predictions
     y_pred = model.predict(X)
