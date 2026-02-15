@@ -21,7 +21,7 @@ if uploaded_file:
    # X = df.drop("target", axis=1)
     X = df.copy()
    # y = df["target"]
-     if "Loan_Status" in df.columns:
+    if "Loan_Status" in df.columns:
         df = df.drop("Loan_Status", axis=1)
 
     # Model selection
