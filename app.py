@@ -24,10 +24,22 @@ if uploaded_file:
    # y = df["target"]
    # if "Loan_Status" in df.columns:
       #  df = df.drop("Loan_Status", axis=1)
-    if "Loan_Status" not in df.columns:
-        st.error("Please upload test dataset including Loan_Status column for evaluation.")
-    else:
+  #1 if "Loan_Status" not in df.columns:
+       #2 st.error("Please upload test dataset including Loan_Status column for evaluation.")
+    #3else:
+       #4 y_true = df["Loan_Status"]
+    # Check if target exists
+    if "Loan_Status" in df.columns:
         y_true = df["Loan_Status"]
+    
+        # Convert target to numeric if needed
+        y_true = y_true.map({"Y": 1, "N": 0})
+    
+        # Drop target from features
+        df = df.drop("Loan_Status", axis=1)
+    
+    else:
+        y_true = None
     
     # Model selection
     model_choice = st.selectbox("Choose a model",
