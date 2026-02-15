@@ -40,7 +40,22 @@ if uploaded_file:
     
     else:
         y_true = None
-    
+
+    # Handle missing values
+    for col in df.columns:
+        if df[col].dtype == "object":
+            df[col].fillna(df[col].mode()[0], inplace=True)
+        else:
+            df[col].fillna(df[col].median(), inplace=True)
+
+    # Encode categorical columns
+    for col in df.select_dtypes(include="object").columns:
+        df[col] = df[col].astype("category").cat.codes
+
+    # Scale
+    scaler = StandardScaler()
+    df_scaled = scaler.fit_transform(df)
+   
     # Model selection
     model_choice = st.selectbox("Choose a model",
                                 ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes", "Random Forest", "XGBoost"])
@@ -60,33 +75,37 @@ if uploaded_file:
     # Load model
    # model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
     #Preprocessing Data
-    # Handle missing values
-    for col in df.columns:
-        if df[col].dtype == "object":
-            df[col].fillna(df[col].mode()[0], inplace=True)
-        else:
-            df[col].fillna(df[col].median(), inplace=True)
-
-    # Encode categorical columns
-    for col in df.select_dtypes(include="object").columns:
-        df[col] = df[col].astype("category").cat.codes
-
-    # Scale
     
-    scaler = StandardScaler()
-    df_scaled = scaler.fit_transform(df)
-
     
     # Predictions
-   #y_pred = model.predict(X)
     y_pred = model.predict(df_scaled)
 
     # Metrics
-    st.subheader("Evaluation Metrics")
-    st.text(classification_report(y_true, y_pred))
+    #st.subheader("Evaluation Metrics")
+  #  st.text(classification_report(y_true, y_pred))
 
     # Confusion Matrix
-    cm = confusion_matrix(y_true, y_pred)
-    fig, ax = plt.subplots()
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
-    st.pyplot(fig)
+  #  cm = confusion_matrix(y_true, y_pred)
+  #  fig, ax = plt.subplots()
+   # sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
+   # st.pyplot(fig)
+# Convert to labels
+    prediction_labels = ["Y" if pred == 1 else "N" for pred in y_pred]
+    
+    df_result = df.copy()
+    df_result["Predicted_Loan_Status"] = prediction_labels
+    
+    st.subheader("Prediction Results")
+    st.dataframe(df_result)
+    
+    # Show metrics only if true labels available
+    if y_true is not None:
+        from sklearn.metrics import classification_report, confusion_matrix
+    
+        st.subheader("Classification Report")
+        st.text(classification_report(y_true, y_pred))
+    
+        st.subheader("Confusion Matrix")
+        st.write(confusion_matrix(y_true, y_pred))
+    else:
+        st.info("Loan_Status column not found. Showing predictions only.")
