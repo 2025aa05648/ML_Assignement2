@@ -43,7 +43,7 @@ if uploaded_file:
     
     # Model selection
     model_choice = st.selectbox("Choose a model",
-                                ["Logistic Regression", "Decision Tree", "kNN", "Naive Bayes", "Random Forest", "XGBoost"])
+                                ["Logistic Regression", "Decision Tree", "KNN", "Naive Bayes", "Random Forest", "XGBoost"])
     #Model filenames
     model_files = {
     "Logistic Regression": "model/lr.pkl",
