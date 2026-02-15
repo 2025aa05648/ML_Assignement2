@@ -83,10 +83,10 @@ if uploaded_file:
 
     # Metrics
     st.subheader("Evaluation Metrics")
-    st.text(classification_report(y, y_pred))
+    st.text(classification_report(y_true, y_pred))
 
     # Confusion Matrix
-    cm = confusion_matrix(y, y_pred)
+    cm = confusion_matrix(y_true, y_pred)
     fig, ax = plt.subplots()
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
     st.pyplot(fig)
