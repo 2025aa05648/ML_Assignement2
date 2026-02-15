@@ -25,9 +25,9 @@ if uploaded_file:
    # if "Loan_Status" in df.columns:
       #  df = df.drop("Loan_Status", axis=1)
     if "Loan_Status" not in df.columns:
-    st.error("Please upload test dataset including Loan_Status column for evaluation.")
+        st.error("Please upload test dataset including Loan_Status column for evaluation.")
     else:
-    y_true = df["Loan_Status"]
+        y_true = df["Loan_Status"]
     
     # Model selection
     model_choice = st.selectbox("Choose a model",
