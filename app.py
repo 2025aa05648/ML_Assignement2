@@ -5,6 +5,7 @@ import pandas as pd
 import joblib
 import pickle
 from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -43,8 +44,21 @@ if uploaded_file:
     # Load model
    # model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
 
+    # Encode categorical columns
+    for col in df.select_dtypes(include="object").columns:
+        df[col] = df[col].astype("category").cat.codes
+
+# Scale
+    
+    scaler = StandardScaler()
+    df_scaled = scaler.fit_transform(df)
+
+    
+
+
     # Predictions
-    y_pred = model.predict(X)
+   #y_pred = model.predict(X)
+    y_pred = model.predict(df_scaled)
 
     # Metrics
     st.subheader("Evaluation Metrics")
