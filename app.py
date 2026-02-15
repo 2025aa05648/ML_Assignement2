@@ -43,19 +43,24 @@ if uploaded_file:
     model = joblib.load(model_path)
     # Load model
    # model = pickle.load(open(f"model/{model_choice.replace(' ', '_').lower()}.pkl", "rb"))
+    #Preprocessing Data
+    # Handle missing values
+    for col in df.columns:
+        if df[col].dtype == "object":
+            df[col].fillna(df[col].mode()[0], inplace=True)
+        else:
+            df[col].fillna(df[col].median(), inplace=True)
 
     # Encode categorical columns
     for col in df.select_dtypes(include="object").columns:
         df[col] = df[col].astype("category").cat.codes
 
-# Scale
+    # Scale
     
     scaler = StandardScaler()
     df_scaled = scaler.fit_transform(df)
 
     
-
-
     # Predictions
    #y_pred = model.predict(X)
     y_pred = model.predict(df_scaled)
